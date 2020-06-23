@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1592952020 source:d:\my stuff\1cs\syc2\tp_fat32\main.c
+	<stdio.h>
+	<stdlib.h>
+
+1592952013 source:d:\my stuff\1cs\syc2\tp_fat32\disque.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
