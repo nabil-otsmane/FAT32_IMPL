@@ -12,6 +12,7 @@
 1593984972 d:\my stuff\1cs\syc2\tp_fat32\disque.h
 	<stdio.h>
 	<stdlib.h>
+    <unistd.h>
 	<string.h>
 	<ctype.h>
 	<stdint.h>
