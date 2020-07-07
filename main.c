@@ -1,13 +1,14 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "disque.h"
 
-extern void Liste_Disques();
-extern void Lire_secteur(FILE* disque_physique, unsigned int Num_sect);
-extern void Afficher_secteur(FILE* disque_physique, unsigned int Num_sect);
-extern void Afficher_Fdel(FILE* disque_physique, int partition);
+extern char* get_nom_disque_physique();
+extern unsigned short int Liste_Disques();
+extern unsigned short int Lire_Secteur(FILE* Disque_Physique, int Num_Sect, char* secteur);
+extern unsigned short int Afficher_Secteur(FILE* Disque_physique, int Num_sect);
 
-int main() {
-    Liste_Disques();
+
+int main() 
+{
+   unsigned short int Lecture_Liste_Disques = Liste_Disques();
 
     return 0;
 }
