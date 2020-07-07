@@ -64,7 +64,11 @@ unsigned short int Afficher_Secteur(FILE* Disque_physique, int Num_sect)
         printf("Adresse  | Contenu(octet de 1 a 16)\n");
         while(ligne < (Taille_Secteur -1))
         {
+<<<<<<< HEAD
             printf("%lx   | %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x\n",ptr_sect+ligne, sect[ligne], sect[ligne+1], sect[ligne+2], sect[ligne+3], sect[ligne+4], sect[ligne+5], sect[ligne+6], sect[ligne+7], sect[ligne+8], sect[ligne+9], sect[ligne+10], sect[ligne+11], sect[ligne+12], sect[ligne+13], sect[ligne+14], sect[ligne+15], sect[ligne+16]);
+=======
+            printf("%lx   | %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x\n",ptr_sect+ligne, sect[ligne], sect[ligne+1], sect[ligne+2], sect[ligne+3], sect[ligne+4], sect[ligne+5], sect[ligne+6], sect[ligne+7], sect[ligne+8], sect[ligne+9], sect[ligne+10], sect[ligne+11], sect[ligne+12], sect[ligne+13], sect[ligne+14], sect[ligne+15], sect[ligne+16]);
+>>>>>>> 385ac3a2ef70dad410aa992aa541a24777c2e59e
             ligne+=17;
         }
     }
