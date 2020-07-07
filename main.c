@@ -4,13 +4,14 @@
 int main()
 {
     unsigned short int Lecture_Liste_Disques = Liste_Disques();
-   if(ouvrir_disque("./bin/Debug/fat32.img")) {
+    if(ouvrir_disque("./bin/Debug/fat32.img")) {
         lireEntete();
-   } else {
+    } else {
         return 1;
-   }
+    }
 
     Afficher_Secteur(0);
+    Afficher_Fdel();
 
     return 0;
 }

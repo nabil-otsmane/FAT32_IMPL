@@ -72,7 +72,7 @@ unsigned short int Afficher_Secteur(int Num_sect)
 
         printf("Affichage de contenu du secteur Num: %d, du disque : %s \n", Num_sect, get_nom_disque_physique());
         printf("========================================================\n");
-        Afficher_hex(secteur_buff, 512);
+        Afficher_hex(secteur_buff, BPB_BytesPerSector);
     }
 
     return 0;
@@ -102,8 +102,8 @@ uint32_t LireEntier(uint32_t pos, uint32_t taille){
 	pos--;
 
 	while(taille > 0){
-		fseek(fp, pos, SEEK_SET);
-		fseek(fp, taille, SEEK_CUR);
+		fseek(disque_ouvert, pos, SEEK_SET);
+		fseek(disque_ouvert, taille, SEEK_CUR);
 		taille--;
 		temp = fgetc(fp);
 		data = data | temp;
@@ -183,7 +183,7 @@ Repertoire getContenuRepertoire(uint32_t num_clus){
 	uint32_t dir_clus_hi_word;
 	uint32_t dir_clus_lo_word;
 	uint32_t dir_clus;
-	char dir_name[12];
+    char dir_name[12];
 	unsigned char dir_attr;
 	unsigned int i, j, c = 0, dir_size;
 	char ch;
@@ -194,14 +194,20 @@ Repertoire getContenuRepertoire(uint32_t num_clus){
 	for(i = 0; i < (BPB_BytesPerSector*BPB_SectorPerClustor); i+=32){
 		Fichier temp_file;
 		// Extract Attributes
-		dir_attr = LireEntier(dir_adr+i+11, 1);
+		//dir_attr = LireEntier(dir_adr+i+11, 1);
+		fseek(disque_ouvert, dir_adr+i+11, SEEK_SET);
+		fread(&dir_attr, 1, 1, disque_ouvert);
 		// Continues on long-name entries.
 		if(dir_attr == 15)
 			continue;
 
 		// Extracts File name - max 11 chars
 		for(j = 0; j < 11; j++){
-			ch = LireEntier(dir_adr+i+j, 1);
+
+			//ch = LireEntier(dir_adr+i+j, 1);
+			fseek(disque_ouvert, dir_adr+i+j, SEEK_SET);
+			fread(&ch, 1, 1, disque_ouvert);
+
 			if(ch != 0)
 				dir_name[j] = ch;
 			else
@@ -212,10 +218,16 @@ Repertoire getContenuRepertoire(uint32_t num_clus){
 			continue;
 
 		// Extracts File Size
-		dir_size = LireEntier(dir_adr+i+28, 4);
+		//dir_size = LireEntier(dir_adr+i+28, 4);
+		fseek(disque_ouvert, dir_adr+i+28, SEEK_SET);
+		fread(&dir_size, 4, 1, disque_ouvert);
 
-		dir_clus_hi_word = LireEntier(dir_adr+i+20, 2);
-		dir_clus_lo_word = LireEntier(dir_adr+i+26, 2);
+		//dir_clus_hi_word = LireEntier(dir_adr+i+20, 2);
+		fseek(disque_ouvert, dir_adr+i+20, SEEK_SET);
+		fread(&dir_clus_hi_word, 2, 1, disque_ouvert);
+		//dir_clus_lo_word = LireEntier(dir_adr+i+26, 2);
+		fseek(disque_ouvert, dir_adr+i+26, SEEK_SET);
+		fread(&dir_clus_lo_word, 2, 1, disque_ouvert);
 
 		dir_clus = dir_clus_hi_word | dir_clus_lo_word;
 
@@ -229,8 +241,41 @@ Repertoire getContenuRepertoire(uint32_t num_clus){
 	return contenu;
 }
 
-uint8_t Afficher_Fdel(char disque_physique[], int partition) {
-    return 1;
+uint8_t Afficher_Fdel() {
+    int i;
+    Repertoire dir;
+    Fichier* next_dir;
+    char dir_name[12];
+
+    rep_courr = BPB_RootClus;
+    current_directory = getContenuRepertoire(rep_courr);
+
+    printf("test\n");
+
+    fflush(fp);
+
+    if (current_directory.num_files == 0) {
+        fprintf(stderr, "There are no files in the current directory.\n");
+		return 0;
+	}
+
+	if(rep_courr = BPB_RootClus && strcmp(dir_name, ".") == 0){
+		PrintOpenFiles(current_directory);
+		return 1;
+	}
+	/*next_dir = SearchForFileInCurrentDirectory(dir_name);
+	if(next_dir == NULL){
+		fprintf(stderr,
+			"ERROR: '%s' could not be found in the current directory.\n",
+			 dir_name);
+		return 0;
+	}
+	else if(!CheckBitSet(next_dir->file_attr, 4)){
+		fprintf(stderr, "ERROR: '%s' is not a directory.\n", dir_name);
+		return 0;
+	}*/
+	PrintOpenFiles(getContenuRepertoire(next_dir->num_premier_clus));
+
 }
 
 void PrintOpenFiles(Repertoire dir){

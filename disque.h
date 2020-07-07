@@ -47,3 +47,6 @@ uint8_t Lire_Secteur(uint32_t Num_sect);
 unsigned short int Afficher_Secteur(int Num_sect);
 void lireEntete();
 void Afficher_hex(uint8_t octets[], uint16_t taille);
+uint8_t Afficher_Fdel();
+void PrintOpenFiles(Repertoire dir);
+uint32_t LireEntier(uint32_t pos, uint32_t taille);
