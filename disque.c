@@ -258,17 +258,6 @@ uint8_t Afficher_Fdel() {
 	}
 
     PrintDirectoryContents(current_directory);
-	/*next_dir = SearchForFileInCurrentDirectory(dir_name);
-	if(next_dir == NULL){
-		fprintf(stderr,
-			"ERROR: '%s' could not be found in the current directory.\n",
-			 dir_name);
-		return 0;
-	}
-	else if(!CheckBitSet(next_dir->file_attr, 4)){
-		fprintf(stderr, "ERROR: '%s' is not a directory.\n", dir_name);
-		return 0;
-	}*/
 
 }
 
