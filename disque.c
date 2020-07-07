@@ -245,12 +245,10 @@ uint8_t Afficher_Fdel() {
     int i;
     Repertoire dir;
     Fichier* next_dir;
-    char dir_name[12];
+    char dir_name[12] = ".";
 
     rep_courr = BPB_RootClus;
     current_directory = getContenuRepertoire(rep_courr);
-
-    printf("test\n");
 
     fflush(fp);
 
@@ -259,10 +257,7 @@ uint8_t Afficher_Fdel() {
 		return 0;
 	}
 
-	if(rep_courr = BPB_RootClus && strcmp(dir_name, ".") == 0){
-		PrintOpenFiles(current_directory);
-		return 1;
-	}
+    PrintDirectoryContents(current_directory);
 	/*next_dir = SearchForFileInCurrentDirectory(dir_name);
 	if(next_dir == NULL){
 		fprintf(stderr,
@@ -274,37 +269,26 @@ uint8_t Afficher_Fdel() {
 		fprintf(stderr, "ERROR: '%s' is not a directory.\n", dir_name);
 		return 0;
 	}*/
-	PrintOpenFiles(getContenuRepertoire(next_dir->num_premier_clus));
 
 }
 
-void PrintOpenFiles(Repertoire dir){
+void PrintDirectoryContents(Repertoire dir){
 	int i;
 
 	if(dir.num_files == 0){
-		printf("There are no open files.\n");
+		printf("The directory is empty.\n");
 		return;
 	}
 	puts("================================");
-	for(i = 0; i < max_open_files; i++){
+	for(i = 0; i < dir.num_files; i++){
 		Fichier* temp = &dir.fichiers[i];
-		if(temp->file_name[0] == '\0'){
-			continue;
-		}
-		/*if(!CheckBitSet(temp->attr, 4))
+		if(!(0x10 & temp->attr))
 			printf("%s: ", "F");
 		else
-			printf("%s: ", "D");*/
+			printf("%s: ", "D");
 		printf("%s - ", temp->file_name);
-		printf("%i bytes", temp->taille);
-		char* md;
-		switch(temp->mode){
-		case 1: md = "r"; break;
-		case 2: md = "w"; break;
-		case 3: md = "rw"; break;
-		default: md = "error"; break;
-		}
-		printf(", in mode '%s'\n", md);
+		printf("%i bytes ", temp->taille);
+		printf("(Cluster #: %i)\n", temp->num_premier_clus);
 	}
 	puts("================================");
 }
